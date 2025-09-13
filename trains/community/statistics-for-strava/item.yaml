@@ -1,0 +1,12 @@
+name: Statistics For Strava
+slug: statistics-for-strava
+train: community
+title: Statistics For Strava
+description: "Self-hosted, open-source dashboard for your Strava data."
+categories:
+  - Health
+  - Fitness
+homepage: https://github.com/robiningelbrecht/statistics-for-strava
+maintainers:
+  - name: robiningelbrecht
+icon: ./icon.svg

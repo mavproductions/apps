@@ -1,0 +1,914 @@
+groups:
+  - name: Statistics-For-Strava Configuration
+    description: Configure Statistics-For-Strava
+  - name: Statistics-For-Strava Optionals
+    description: Configure optional settings for Statistics-For-Strava
+  - name: User and Group Configuration
+    description: Configure User and Group for Statistics-For-Strava
+  - name: Network Configuration
+    description: Configure Network for Statistics-For-Strava
+  - name: Storage Configuration
+    description: Configure Storage for Statistics-For-Strava
+  - name: Labels Configuration
+    description: Configure Labels for Statistics-For-Strava
+  - name: Resources Configuration
+    description: Configure Resources for Statistics-For-Strava
+
+questions:
+  - variable: TZ
+    group: Statistics-For-Strava Configuration
+    label: Timezone
+    schema:
+      type: string
+      default: "Etc/GMT"
+      required: true
+      $ref:
+        - "definitions/timezone"
+
+  - variable: Statistics-For-Strava
+    label: ""
+    group: Statistics-For-Strava Configuration
+    schema:
+      type: dict
+      attrs:
+        - variable: STRAVA_CLIENT_ID
+          label: Strava Client ID
+          description: The client id of your Strava app
+          schema:
+            type: string
+            default: true
+            required: true
+        - variable: STRAVA_CLIENT_SECRET
+          label: Strava Client Secret
+          description: The client secret of your Strava app.
+          schema:
+            type: string
+            default: Home
+            required: true
+        - variable: STRAVA_REFRESH_TOKEN
+          label: Strava Refresh Token
+          description: |
+            You will need to obtain this token the first time you launch the app. </br>
+            Leave this unchanged for now until the app tells you otherwise. </br>
+            Do not use the refresh token displayed on your Strava API settings page, it will not work </br>
+          schema:
+            type: uri
+            default: ""
+            required: false
+        - variable: SFS_BASE_URL
+          label: Statistics-For-Strava Base URL
+          description: |
+            The URL on which the app will be hosted. This URL will be used in the manifest file. </br>
+            This will allow you to install the web app as a native app on your device. </br>
+            Example: </br>
+            http://server.ip:30111</br>
+            https://statistics-for-strava.example.com
+          schema:
+            type: uri
+            default: ""
+            required: true
+        - variable: SFS_ATHLETE_BIRTHDAY
+          label: Athlete's Birthday
+          description: |
+            Your birthday YYYY-MM-DD
+          schema:
+            type: string
+            default: YYYY-MM-DD
+            required: true
+        - variable: SFS_ATHLETE_MAX_HR_FORMULA
+          label: Athlete's Max Heart Rate Formula
+          description: |
+            The formula used to calculate your max heart rate. The default is Fox (220 - age).</br>
+            Allowed values: arena, astrand, fox, gellish, nes, tanaka (https://pmc.ncbi.nlm.nih.gov/articles/PMC7523886/table/t2-ijes-13-7-1242/) </br>
+            Or you can set a fixed number for any given date range. </br>
+            Example: "2020-01-01": 198 </br>
+            "2025-01-10": 193 </br>
+          schema:
+            type: string
+            default: |
+              "2020-05-15": 192
+              "2022-08-20": 190
+              "2024-01-01": 188
+            required: true
+        - variable: SFS_ATHLETE_HEART_RATE_ZONES
+          label: Athlete's Heart Rate Zones
+          description: |
+            Default heart rate zones. Leave this unchanged for sensible defaults. </br>
+            Example: </br>
+            mode: relative </br>
+            default: </br>
+              zone1: </br>
+                from: 50 </br>
+                to: 60 </br>
+          schema:
+            type: string
+            default: |
+              mode: relative
+              default:
+                zone1:
+                  from: 50
+                  to: 60
+                zone2:
+                  from: 61
+                  to: 70
+                zone3:
+                  from: 71
+                  to: 80
+                zone4:
+                  from: 81
+                  to: 90
+                zone5:
+                  from: 91
+                  to: null
+            required: true
+        - variable: SFS_ATHLETE_WEIGHT_HISTORY
+          label: Athlete's Weight History (kg)
+          description: |
+            History of weight in kilograms. Make sure to replace the YYYY-MM-DD examples with your own weight history. </br>
+            Example: "YYYY-MM-DD": 100 </br>
+          schema:
+            type: string
+            default: |
+              "2020-05-15": 113
+              "2023-08-20": 80
+              "2024-01-01": 79
+            required: true
+        - variable: SFS_ATHLETE_FTP_HISTORY
+          label: Athlete's FTP History
+          description: |
+            Optional, history of Functional Threshold Power (FTP). </br>
+            Example: </br>
+            "2024-10-03": 198 </br>
+            "2025-01-10": 220
+          schema:
+            type: string
+            default: "[]"
+            required: false
+        - variable: appearance
+          label: Appearance Settings
+          schema:
+            type: dict
+            attrs:
+              - variable: SFS_APPEARANCE_LOCALE
+                label: Locale
+                description: Allowed options are en_US, fr_FR, it_IT, nl_BE, de_DE, pt_BR, pt_PT, zh_CN.
+                schema:
+                  type: string
+                  default: "en_US"
+                  required: true
+              - variable: SFS_APPEARANCE_UNIT_SYSTEM
+                label: Unit System
+                description: Allowed options are metric or imperial.
+                schema:
+                  type: string
+                  default: "metric"
+                  enum:
+                    - value: "metric"
+                      description: Metric
+                    - value: "imperial"
+                      description: Imperial
+                  required: true
+              - variable: SFS_APPEARANCE_TIME_FORMAT
+                label: Time Format
+                description: Allowed formats are 24 or 12.
+                schema:
+                  type: string
+                  default: "24"
+                  enum:
+                    - value: "24"
+                      description: 24-hour format
+                    - value: "12"
+                      description: 12-hour format (AM/PM)
+                  required: true
+              - variable: SFS_APPEARANCE_SHORT_DATE_FORMAT
+                label: Short Date Format
+                description: For valid PHP date formats: https://www.php.net/manual/en/datetime.format.php
+                schema:
+                  type: string
+                  default: "d-m-y"
+                  required: true
+              - variable: SFS_APPEARANCE_NORMAL_DATE_FORMAT
+                label: Normal Date Format
+                description: |
+                  For valid PHP date formats: https://www.php.net/manual/en/datetime.format.php </br>
+                  Example: d-m-y # This renders to 01-01-25 </br>
+                  Example: d-m-Y # This renders to 01-01-2025 </br>
+                schema:
+                  type: string
+                  default: "d-m-Y"
+                  required: true
+              - variable: SFS_APPEARANCE_HEATMAP_POLYLINE_COLOR
+                label: Heatmap Polyline Color
+                description: Specifies the color of polylines drawn on the heatmap. Accepts any valid CSS color (e.g., "red", "#FF0000").
+                schema:
+                  type: string
+                  default: "#fc6719"
+                  required: true
+              - variable: SFS_APPEARANCE_HEATMAP_TILE_LAYER_URL
+                label: Heatmap Tile Layer URL
+                description: The URL for the map tiles. You can use multiple URLs for layers.
+                schema:
+                  type: string
+                  default: "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  required: true
+              - variable: SFS_APPEARANCE_HEATMAP_ENABLE_GRAYSCALE
+                label: Enable Heatmap Grayscale
+                description: Enables or disables grayscale styling on the heatmap.
+                schema:
+                  type: boolean
+                  default: true
+                  required: true
+              - variable: SFS_APPEARANCE_PHOTOS_HIDE_FOR_SPORT_TYPES
+                label: Hide Photos for Sport Types
+                description: |
+                  An array of sport types for which photos should be hidden on the photos page. </br>
+                  A full list of allowed options is available on </br>
+                  https://statistics-for-strava-docs.robiningelbrecht.be/#/configuration/main-configuration?id=supported-sport-types </br>
+                schema:
+                  type: string
+                  default: "[]"
+                  required: false
+              - variable: SFS_APPEARANCE_SPORT_TYPES_SORTING_ORDER
+                label: Sport Types Sorting Order
+                description: A list to decide the order of sport types in the UI.
+                schema:
+                  type: string
+                  default: "[]"
+                  required: false
+        - variable: import
+          label: Import Settings
+          schema:
+            type: dict
+            attrs:
+              - variable: SFS_IMPORT_ACTIVITIES_PER_IMPORT
+                label: Number of Activities to Process Per Import
+                description: |
+                  Sets a cap on the number of new activities processed per import to avoid Strava API rate limits. </br>
+                  250 is a safe number. </br>
+                schema:
+                  type: int
+                  default: 250
+                  required: true
+              - variable: SFS_IMPORT_SPORT_TYPES_TO_IMPORT
+                label: Sport Types to Import
+                description: An array of sport types to import. Leave empty to import all.
+                schema:
+                  type: string
+                  default: "[]"
+                  required: false
+              - variable: SFS_IMPORT_ACTIVITY_VISIBILITIES_TO_IMPORT
+                label: Activity Visibilities to Import
+                description: An array of activity visibilities to import. Leave empty to import all. Allowed values: ["everyone", "followers_only", "only_me"]
+                schema:
+                  type: string
+                  default: "[]"
+                  required: false
+              - variable: SFS_IMPORT_SKIP_ACTIVITIES_BEFORE
+                label: Skip Activities Before Date
+                description: The date (YYYY-MM-DD) from which to start importing activities.
+                schema:
+                  type: string
+                  default: null
+                  required: false
+              - variable: SFS_IMPORT_ACTIVITIES_TO_SKIP
+                label: Activities to Skip During Import
+                description: An array of activity IDs to skip. Example: ["123456789", "987654321"]
+                schema:
+                  type: string
+                  default: "[]"
+                  required: false
+              - variable: SFS_IMPORT_OPT_IN_SEGMENT_IMPORT
+                label: Opt-In to Segment Detail Import
+                description: Setting this to true will import segment details, increasing import time.
+                schema:
+                  type: boolean
+                  default: false
+                  required: true
+        - variable: metrics
+          label: Metrics Settings
+          schema:
+            type: dict
+            attrs:
+              - variable: SFS_METRICS_EDDINGTON
+                label: Eddington Scores
+                description: Configure Eddington scores for different sport types.
+                schema:
+                  type: list
+                  default: []
+                  required: true
+                  items:
+                    - variable: eddington_score
+                      label: Eddington Score
+                      schema:
+                        type: dict
+                        attrs:
+                          - variable: label
+                            label: Label
+                            schema:
+                              type: string
+                              required: true
+                          - variable: showInNavBar
+                            label: Show in Navbar
+                            schema:
+                              type: boolean
+                              required: true
+                          - variable: showInDashboardWidget
+                            label: Show in Dashboard Widget
+                            schema:
+                              type: boolean
+                              required: true
+                          - variable: sportTypesToInclude
+                            label: Sport Types to Include
+                            schema:
+                              type: list
+                              required: true
+                              items:
+                                - variable: sport_type
+                                  label: Sport Type
+                                  schema:
+                                    type: string
+                                    required: true
+        - variable: zwift
+          label: Zwift Configuration
+          schema:
+            type: dict
+            attrs:
+              - variable: SFS_ZWIFT_LEVEL
+                label: Zwift Level
+                description: Your Zwift level (1 - 100). Leave empty to disable this feature.
+                schema:
+                  type: int
+                  default: null
+                  required: false
+              - variable: SFS_ZWIFT_RACING_SCORE
+                label: Zwift Racing Score
+                description: Your Zwift racing score (0 - 1000).
+                schema:
+                  type: int
+                  default: null
+                  required: false
+        - variable: additional_envs
+          label: Additional Environment Variables
+          schema:
+            type: list
+            default: []
+            items:
+              - variable: env
+                label: Environment Variable
+                schema:
+                  type: dict
+                  attrs:
+                    - variable: name
+                      label: Name
+                      schema:
+                        type: string
+                        required: true
+                    - variable: value
+                      label: Value
+                      schema:
+                        type: string
+  - variable: Statistics-For-Strava
+    label: ""
+    group: Statistics-For-Strava Optionals
+    schema:
+      type: dict
+      attrs:
+        - variable: SFS_APP_SUBTITLE
+          label: Strava App Subtitle
+          description: The subtitle of your Strava app
+          schema:
+            type: string
+            default: null
+            required: false
+        - variable: SFS_PROFILE_PICTURE_URL
+          label: Statistics For Strava Profile Picture URL
+          description: |
+            A link to your profile picture. Will be used to display in the nav bar and link to your Strava </br>
+            Any image can be used; a square format is recommended. </br>
+            Leave empty to disable this feature </br>
+            Example: http://localhost/meBiking.jpg </br>
+          schema:
+            type: uri
+            default: "null"
+            required: false
+        - variable: SFS_NTFY_URL
+          label: Statistics For Strava NTFY URL
+          description: |
+            Full URL with ntfy topic included. This topic will be </br>
+            used to notify you when a new HTML build has run.  </br>
+          schema:
+            type: uri
+            default: "null"
+            required: false
+        - variable: SFS_AI_ENABLED
+          label: Statistics For Strava AI Enabled
+          description: |
+            Enable or disable AI features. </br>
+            ⚠️ Use caution when enabling this feature if your app is publicly accessible! </br>
+          schema:
+            type: boolean
+            default: false
+            required: false
+        - variable: SFS_AI_UI_ENABLED
+          label: Statistics For Strava AI UI Enabled
+          description: |
+            Enable or disable AI features in the UI. </br>
+            By default, these features are only accessible via a CLI command. </br>
+            ⚠️ Use caution when enabling this feature if your app is publicly accessible! </br>
+          schema:
+            type: boolean
+            default: false
+            required: false
+        - variable: SFS_AI_PROVIDER
+          label: Statistics For Strava AI Provider
+          description: |
+            Enable or disable AI features in the UI. </br>
+            By default, these features are only accessible via a CLI command. </br>
+            ⚠️ Use caution when enabling this feature if your app is publicly accessible! </br>
+          schema:
+            type: string
+            default: "openai"
+            enum:
+              - value: "anthropic"
+                description: Anthropic
+              - value: "gemini"
+                description: Gemini
+              - value: "ollama"
+                description: Ollama
+              - value: "openAI"
+                description: OpenAI
+              - value: "deepseek"
+                description: DeepSeek
+              - value: "mistral"
+                description: Mistral
+            required: false
+        - variable: SFS_AI_API_KEY
+          label: Statistics For Strava AI API Key
+          description: |
+            The API key to use for authenticating requests to the AI provider. </br>
+            ⚠️ Keep this key secret and do not expose it in client-side code! </br>
+          schema:
+            type: string
+            default: null
+            required: false
+        - variable: SFS_AI_MODEL_NAME
+          label: Statistics For Strava AI Model Name
+          description: |
+            The name of the AI model to use for requests. </br>
+          schema:
+            type: string
+            default: null
+            required: false
+        - variable: SFS_AI_OLLAMA_URL
+          label: Statistics For Strava AI Ollama URL
+          description: |
+            This option is only required when using provider "ollama". </br>
+            Example: http://host.docker.internal:11434/api </br>
+          schema:
+            type: string
+            default: null
+            required: false
+  - variable: run_as
+    label: ""
+    group: User and Group Configuration
+    schema:
+      type: dict
+      attrs:
+        - variable: user
+          label: User ID
+          description: The user id that Statistics-For-Strava files will be owned by.
+          schema:
+            type: int
+            min: 568
+            default: 568
+            required: true
+        - variable: group
+          label: Group ID
+          description: The group id that Statistics-For-Strava files will be owned by.
+          schema:
+            type: int
+            min: 568
+            default: 568
+            required: true
+
+  - variable: network
+    label: ""
+    group: Network Configuration
+    schema:
+      type: dict
+      attrs:
+        - variable: web_port
+          label: WebUI Port
+          schema:
+            type: dict
+            attrs:
+              - variable: bind_mode
+                label: Port Bind Mode
+                description: |
+                  The port bind mode.</br>
+                  - Publish: The port will be published on the host for external access.</br>
+                  - Expose: The port will be exposed for inter-container communication.</br>
+                  - None: The port will not be exposed or published.</br>
+                  Note: If the Dockerfile defines an EXPOSE directive,
+                  the port will still be exposed for inter-container communication regardless of this setting.
+                schema:
+                  type: string
+                  default: "published"
+                  enum:
+                    - value: "published"
+                      description: Publish port on the host for external access
+                    - value: "exposed"
+                      description: Expose port for inter-container communication
+                    - value: ""
+                      description: None
+              - variable: port_number
+                label: Port Number
+                schema:
+                  type: int
+                  default: 30111
+                  min: 1
+                  max: 65535
+                  required: true
+              - variable: host_ips
+                label: Host IPs
+                description: IPs on the host to bind this port
+                schema:
+                  type: list
+                  show_if: [["bind_mode", "=", "published"]]
+                  default: []
+                  items:
+                    - variable: host_ip
+                      label: Host IP
+                      schema:
+                        type: string
+                        required: true
+                        $ref:
+                          - definitions/node_bind_ip
+
+  - variable: storage
+    label: ""
+    group: Storage Configuration
+    schema:
+      type: dict
+      attrs:
+        - variable: data
+          label: Statistics-For-Strava Data Storage
+          description: The path to store Statistics-For-Strava Data.
+          schema:
+            type: dict
+            attrs:
+              - variable: type
+                label: Type
+                description: |
+                  ixVolume: Is dataset created automatically by the system.</br>
+                  Host Path: Is a path that already exists on the system.
+                schema:
+                  type: string
+                  required: true
+                  default: "ix_volume"
+                  enum:
+                    - value: "host_path"
+                      description: Host Path (Path that already exists on the system)
+                    - value: "ix_volume"
+                      description: ixVolume (Dataset created automatically by the system)
+              - variable: ix_volume_config
+                label: ixVolume Configuration
+                description: The configuration for the ixVolume dataset.
+                schema:
+                  type: dict
+                  show_if: [["type", "=", "ix_volume"]]
+                  $ref:
+                    - "normalize/ix_volume"
+                  attrs:
+                    - variable: acl_enable
+                      label: Enable ACL
+                      description: Enable ACL for the storage.
+                      schema:
+                        type: boolean
+                        default: false
+                    - variable: dataset_name
+                      label: Dataset Name
+                      description: The name of the dataset to use for storage.
+                      schema:
+                        type: string
+                        required: true
+                        hidden: true
+                        default: "data"
+                    - variable: acl_entries
+                      label: ACL Configuration
+                      schema:
+                        type: dict
+                        show_if: [["acl_enable", "=", true]]
+                        attrs: []
+              - variable: host_path_config
+                label: Host Path Configuration
+                schema:
+                  type: dict
+                  show_if: [["type", "=", "host_path"]]
+                  attrs:
+                    - variable: acl_enable
+                      label: Enable ACL
+                      description: Enable ACL for the storage.
+                      schema:
+                        type: boolean
+                        default: false
+                    - variable: acl
+                      label: ACL Configuration
+                      schema:
+                        type: dict
+                        show_if: [["acl_enable", "=", true]]
+                        attrs: []
+                        $ref:
+                          - "normalize/acl"
+                    - variable: path
+                      label: Host Path
+                      description: The host path to use for storage.
+                      schema:
+                        type: hostpath
+                        show_if: [["acl_enable", "=", false]]
+                        required: true
+        - variable: postgres_data
+          label: Statistics-For-Strava Postgres Data Storage
+          description: The path to store Statistics-For-Strava Postgres Data.
+          schema:
+            type: dict
+            attrs:
+              - variable: type
+                label: Type
+                description: |
+                  ixVolume: Is dataset created automatically by the system.</br>
+                  Host Path: Is a path that already exists on the system.
+                schema:
+                  type: string
+                  required: true
+                  default: "ix_volume"
+                  enum:
+                    - value: "host_path"
+                      description: Host Path (Path that already exists on the system)
+                    - value: "ix_volume"
+                      description: ixVolume (Dataset created automatically by the system)
+              - variable: ix_volume_config
+                label: ixVolume Configuration
+                description: The configuration for the ixVolume dataset.
+                schema:
+                  type: dict
+                  show_if: [["type", "=", "ix_volume"]]
+                  $ref:
+                    - "normalize/ix_volume"
+                  attrs:
+                    - variable: acl_enable
+                      label: Enable ACL
+                      description: Enable ACL for the storage.
+                      schema:
+                        type: boolean
+                        default: false
+                    - variable: dataset_name
+                      label: Dataset Name
+                      description: The name of the dataset to use for storage.
+                      schema:
+                        type: string
+                        required: true
+                        hidden: true
+                        default: "postgres_data"
+                    - variable: acl_entries
+                      label: ACL Configuration
+                      schema:
+                        type: dict
+                        show_if: [["acl_enable", "=", true]]
+                        attrs: []
+              - variable: host_path_config
+                label: Host Path Configuration
+                schema:
+                  type: dict
+                  show_if: [["type", "=", "host_path"]]
+                  attrs:
+                    - variable: acl_enable
+                      label: Enable ACL
+                      description: Enable ACL for the storage.
+                      schema:
+                        type: boolean
+                        default: false
+                    - variable: acl
+                      label: ACL Configuration
+                      schema:
+                        type: dict
+                        show_if: [["acl_enable", "=", true]]
+                        attrs: []
+                        $ref:
+                          - "normalize/acl"
+                    - variable: path
+                      label: Host Path
+                      description: The host path to use for storage.
+                      schema:
+                        type: hostpath
+                        show_if: [["acl_enable", "=", false]]
+                        required: true
+                    - variable: auto_permissions
+                      label: Automatic Permissions
+                      description: |
+                        Automatically set permissions for the host path.
+                        Enabling this, will check the top level directory,</br>
+                        If it finds incorrect permissions, it will `chown` the
+                        host path to the user and group required for the
+                        postgres container.
+                      schema:
+                        type: boolean
+                        default: false
+                        show_if: [["acl_enable", "=", false]]
+        - variable: additional_storage
+          label: Additional Storage
+          schema:
+            type: list
+            default: []
+            items:
+              - variable: storageEntry
+                label: Storage Entry
+                schema:
+                  type: dict
+                  attrs:
+                    - variable: type
+                      label: Type
+                      description: |
+                        ixVolume: Is dataset created automatically by the system.</br>
+                        Host Path: Is a path that already exists on the system.</br>
+                        SMB Share: Is a SMB share that is mounted to as a volume.
+                      schema:
+                        type: string
+                        required: true
+                        default: "ix_volume"
+                        enum:
+                          - value: "host_path"
+                            description: Host Path (Path that already exists on the system)
+                          - value: "ix_volume"
+                            description: ixVolume (Dataset created automatically by the system)
+                          - value: "cifs"
+                            description: SMB/CIFS Share (Mounts a volume to a SMB share)
+                    - variable: read_only
+                      label: Read Only
+                      description: Mount the volume as read only.
+                      schema:
+                        type: boolean
+                        default: false
+                    - variable: mount_path
+                      label: Mount Path
+                      description: The path inside the container to mount the storage.
+                      schema:
+                        type: path
+                        required: true
+                    - variable: host_path_config
+                      label: Host Path Configuration
+                      schema:
+                        type: dict
+                        show_if: [["type", "=", "host_path"]]
+                        attrs:
+                          - variable: acl_enable
+                            label: Enable ACL
+                            description: Enable ACL for the storage.
+                            schema:
+                              type: boolean
+                              default: false
+                          - variable: acl
+                            label: ACL Configuration
+                            schema:
+                              type: dict
+                              show_if: [["acl_enable", "=", true]]
+                              attrs: []
+                              $ref:
+                                - "normalize/acl"
+                          - variable: path
+                            label: Host Path
+                            description: The host path to use for storage.
+                            schema:
+                              type: hostpath
+                              show_if: [["acl_enable", "=", false]]
+                              required: true
+                    - variable: ix_volume_config
+                      label: ixVolume Configuration
+                      description: The configuration for the ixVolume dataset.
+                      schema:
+                        type: dict
+                        show_if: [["type", "=", "ix_volume"]]
+                        $ref:
+                          - "normalize/ix_volume"
+                        attrs:
+                          - variable: acl_enable
+                            label: Enable ACL
+                            description: Enable ACL for the storage.
+                            schema:
+                              type: boolean
+                              default: false
+                          - variable: dataset_name
+                            label: Dataset Name
+                            description: The name of the dataset to use for storage.
+                            schema:
+                              type: string
+                              required: true
+                              default: "storage_entry"
+                          - variable: acl_entries
+                            label: ACL Configuration
+                            schema:
+                              type: dict
+                              show_if: [["acl_enable", "=", true]]
+                              attrs: []
+                              $ref:
+                                - "normalize/acl"
+                    - variable: cifs_config
+                      label: SMB Configuration
+                      description: The configuration for the SMB dataset.
+                      schema:
+                        type: dict
+                        show_if: [["type", "=", "cifs"]]
+                        attrs:
+                          - variable: server
+                            label: Server
+                            description: The server to mount the SMB share.
+                            schema:
+                              type: string
+                              required: true
+                          - variable: path
+                            label: Path
+                            description: The path to mount the SMB share.
+                            schema:
+                              type: string
+                              required: true
+                          - variable: username
+                            label: Username
+                            description: The username to use for the SMB share.
+                            schema:
+                              type: string
+                              required: true
+                          - variable: password
+                            label: Password
+                            description: The password to use for the SMB share.
+                            schema:
+                              type: string
+                              required: true
+                              private: true
+                          - variable: domain
+                            label: Domain
+                            description: The domain to use for the SMB share.
+                            schema:
+                              type: string
+  - variable: labels
+    label: ""
+    group: Labels Configuration
+    schema:
+      type: list
+      default: []
+      items:
+        - variable: label
+          label: Label
+          schema:
+            type: dict
+            attrs:
+              - variable: key
+                label: Key
+                schema:
+                  type: string
+                  required: true
+              - variable: value
+                label: Value
+                schema:
+                  type: string
+                  required: true
+              - variable: containers
+                label: Containers
+                description: Containers where the label should be applied
+                schema:
+                  type: list
+                  items:
+                    - variable: container
+                      label: Container
+                      schema:
+                        type: string
+                        required: true
+                        enum:
+                          - value: Statistics-For-Strava
+                            description: Statistics-For-Strava
+                          - value: postgres
+                            description: postgres
+  - variable: resources
+    label: ""
+    group: Resources Configuration
+    schema:
+      type: dict
+      attrs:
+        - variable: limits
+          label: Limits
+          schema:
+            type: dict
+            attrs:
+              - variable: cpus
+                label: CPUs
+                description: CPUs limit for Statistics-For-Strava.
+                schema:
+                  type: int
+                  default: 2
+                  required: true
+              - variable: memory
+                label: Memory (in MB)
+                description: Memory limit for Statistics-For-Strava.
+                schema:
+                  type: int
+                  default: 4096
+                  required: true
