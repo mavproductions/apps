@@ -7,6 +7,12 @@ categories:
   - Health
   - Fitness
 homepage: https://github.com/robiningelbrecht/statistics-for-strava
+sources:
+  - https://github.com/robiningelbrecht/statistics-for-strava
+screenshots:
+  - ./screenshot-1.png
+  - https://github.com/robiningelbrecht/statistics-for-strava/blob/master/public/assets/images/manifest/screenshots/dashboard.jpeg
 maintainers:
   - name: robiningelbrecht
+    url: https://github.com/robiningelbrecht
 icon: ./icon.svg

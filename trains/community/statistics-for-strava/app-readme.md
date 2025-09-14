@@ -30,3 +30,5 @@ Strava does not allow to fetch a complete history of your completed challenges a
 - On the next import, all your challenges will be imported
 #### WARNING
 Make sure before you save the source code, your Strava account is set to be translated in English. The app can only handle this export in English for now. 
+
+![Screenshot](./screenshot-1.png)

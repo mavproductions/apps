@@ -15,7 +15,6 @@ services:
       - STRAVA_REFRESH_TOKEN=${STRAVA_REFRESH_TOKEN}
       - SFS_BASE_URL=${SFS_BASE_URL}
       - SFS_APP_SUBTITLE=${SFS_APP_SUBTITLE}
-      - SFS_APP_DESCRIPTION=${SFS_APP_DESCRIPTION}
       - SFS_AI_API_KEY=${SFS_AI_API_KEY}
       - SFS_AI_ENABLED=${SFS_AI_ENABLED}
       - SFS_AI_UI_ENABLED=${SFS_AI_UI_ENABLED}
@@ -23,6 +22,7 @@ services:
       - SFS_AI_MODEL_NAME=${SFS_AI_MODEL_NAME}
       - SFS_AI_OLLAMA_URL=${SFS_AI_OLLAMA_URL}
       - SFS_PROFILE_PICTURE_URL=${SFS_PROFILE_PICTURE_URL}
+      - SFS_NTFY_URL=${SFS_NTFY_URL}
       - SFS_ATHLETE_BIRTHDAY=${SFS_ATHLETE_BIRTHDAY}
       - SFS_ATHLETE_MAX_HR_FORMULA=${SFS_ATHLETE_MAX_HR_FORMULA}
       - SFS_ATHLETE_HEART_RATE_ZONES=${SFS_ATHLETE_HEART_RATE_ZONES}
@@ -48,3 +48,21 @@ services:
       - SFS_ZWIFT_LEVEL=${SFS_ZWIFT_LEVEL}
       - SFS_ZWIFT_RACING_SCORE=${SFS_ZWIFT_RACING_SCORE}
       - ADDITIONAL_ENVS=${ADDITIONAL_ENVS}
+  cron:
+    image: robiningelbrecht/strava-statistics:latest
+    container_name: statistics-for-strava-cron
+    restart: unless-stopped
+    volumes:
+      - ./config:/var/www/config/app
+      - ./build:/var/www/build
+      - ./storage/database:/var/www/storage/database
+      - ./storage/files:/var/www/storage/files
+    environment:
+      - TZ=${TZ}
+      - SFS_CRON_SCHEDULE=${SFS_CRON_SCHEDULE}
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        echo "${SFS_CRON_SCHEDULE} { /usr/local/bin/php /var/www/bin/console app:strava:import-data && /usr/local/bin/php /var/www/bin/console app:strava:build-files; } >> /var/log/cron.log 2>&1" >> /etc/crontabs/root
+        crond -f -L /var/log/cron.log
