@@ -1,0 +1,49 @@
+# This file contains test values for the Statistics For Strava app.
+# Replace placeholder values with your actual test data.
+
+# Required values from the 'Statistics-For-Strava Configuration' group
+STRAVA_CLIENT_ID: "122010"
+STRAVA_CLIENT_SECRET: "b4e0a59c08b4c66b40dfb405d6eb8f4f6278acfb"
+SFS_BASE_URL: "http://localhost:30111"
+SFS_ATHLETE_BIRTHDAY: "1990-01-01"
+SFS_ATHLETE_MAX_HR_FORMULA: "fox"
+SFS_ATHLETE_HEART_RATE_ZONES: |
+  mode: relative
+  default:
+    zone1:
+      from: 50
+      to: 60
+    zone2:
+      from: 61
+      to: 70
+    zone3:
+      from: 71
+      to: 80
+    zone4:
+      from: 81
+      to: 90
+    zone5:
+      from: 91
+      to: null
+SFS_ATHLETE_WEIGHT_HISTORY: |
+  "1991-01-03": 58.97
+
+# Required values from the 'Cron Configuration' group
+SFS_CRON_SCHEDULE: "0 2 * * *"
+
+# Required values from 'Appearance Settings'
+SFS_APPEARANCE_LOCALE: "en_US"
+SFS_APPEARANCE_UNIT_SYSTEM: "metric"
+SFS_APPEARANCE_TIME_FORMAT: "24"
+SFS_APPEARANCE_SHORT_DATE_FORMAT: "d-m-y"
+SFS_APPEARANCE_NORMAL_DATE_FORMAT: "d-m-Y"
+SFS_APPEARANCE_HEATMAP_POLYLINE_COLOR: "#fc6719"
+SFS_APPEARANCE_HEATMAP_TILE_LAYER_URL: "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+SFS_APPEARANCE_HEATMAP_ENABLE_GRAYSCALE: true
+
+# Required values from 'Import Settings'
+SFS_IMPORT_ACTIVITIES_PER_IMPORT: 250
+SFS_IMPORT_OPT_IN_SEGMENT_IMPORT: false
+
+# Required values from 'Metrics Settings'
+SFS_METRICS_EDDINGTON: []
